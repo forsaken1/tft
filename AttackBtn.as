@@ -13,10 +13,21 @@
 			x = 770;
 			y = 160;
 			addEventListener(MouseEvent.CLICK, Press);
+			addEventListener(MouseEvent.MOUSE_OVER, OnElement);
+			addEventListener(MouseEvent.MOUSE_OUT, OutElement);
+		}
+		
+		function OnElement(event:MouseEvent) {
+			gotoAndStop(pressed ? 4 : 2);
+		}
+		
+		function OutElement(event:MouseEvent) {
+			gotoAndStop(pressed ? 3 : 1);
 		}
 		
 		private function Press(event:MouseEvent):void {
 			if(unit.GetInitiative() == 0) return;
+			pressed = !pressed;
 			if(pressed) 
 				Off();
 			else 
@@ -24,17 +35,15 @@
 		}
 		
 		public function Off() {
-			gotoAndStop(1);
+			gotoAndStop(pressed ? 4 : 2);
 			unit.RemoveHighlightAttack();
 			unit.HighlightMove();
-			pressed = false;
 		}
 		
 		public function On() {
-			gotoAndStop(2);
+			gotoAndStop(pressed ? 4 : 2);
 			unit.RemoveHighlightMove();
 			unit.HighlightAttack();
-			pressed = true;
 		}
 		
 		public function GetPressed() { return pressed; }

@@ -98,6 +98,10 @@
 			}
 		}
 		
+		public function Remove() {
+			stage.removeChild(this);
+		}
+		
 		function AttackGexMouseOver(event:MouseEvent) { gotoAndStop(6); }
 		function AttackGexMouseOut(event:MouseEvent) { gotoAndStop(3); }
 		function AttackGex(event:MouseEvent) { Global.selectedUnit.AttackTo(this); }

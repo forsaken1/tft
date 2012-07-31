@@ -16,19 +16,19 @@
 			
 			var textFormat = new TextFormat();
 			textFormat.font = "TF2 Secondary";
-			textFormat.size = 16;
+			textFormat.size = 17;
 			
 			className = new TextField();
 			className.text = unit.GetClassName();
 			addChild(className);
-			className.x = 95;
+			className.x = 94;
 			className.y = 10;
 			className.setTextFormat(textFormat);
 			
 			health = new TextField();
 			health.text = unit.GetCurrentHealth() + "/" + unit.GetHealth();
 			addChild(health);
-			health.x = 120;
+			health.x = 115;
 			health.y = 38;
 			health.setTextFormat(textFormat);
 			
