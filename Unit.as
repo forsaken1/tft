@@ -13,13 +13,13 @@
 		protected var targetLink, gexLink:Gex;
 		protected var health:int, currentHealth:int, moveRadius:int, attackRadius:int, 
 		rotateSpeed:int = 4, moveSpeed:int = 4, NClass:int, damageFirst:int,
-		initiative:int;
+		initiative:int, currentInitiative:int;
 		protected var className:String;
 		protected var dx, dy:Number;
 		protected var hbar:HealthBar;
 		protected var attackButton:AttackBtn;
 		protected var info:InfoBar;
-		protected var selected, moving, attacking, team:Boolean;
+		protected var selected, moving, attacking, team, death:Boolean;
 		protected var radius = [
 				 [[[-1,-1],[-1, 0],[99,99]], 
 				  [[ 0,-1],[99,99],[ 0, 1]], 
@@ -80,6 +80,8 @@
 		public function Unit(gexLink_:Gex, area_:Object, team_:Boolean) {
 			stop();
 			currentHealth = health;
+			currentInitiative = initiative;
+			death = false;
 			
 			team = team_;
 			area = area_;
@@ -100,7 +102,19 @@
 			AddHealthBar();
 			selected = false;
 			moving = false;
+			//addEventListener(MouseEvent.CLICK, Select);/////////////
+		}
+		
+		/*public function AddSelectListener() {
 			addEventListener(MouseEvent.CLICK, Select);
+		}
+		
+		public function RemoveSelectListener() {
+			removeEventListener(MouseEvent.CLICK, Select);
+		}*/
+		
+		public function RefreshInitiative() {
+			currentInitiative = initiative;
 		}
 		
 		public function AttackTo(gex_:Gex) {
@@ -138,7 +152,7 @@
 				rotateTimer = new Timer(2, 1);
 			}
 			else {
-				rotateTimer = new Timer(2, (int)(Math.abs(rot) / rotateSpeed + 0.6));
+				rotateTimer = new Timer(2, (int)(Math.abs(rot) / rotateSpeed + 0.9));
 				
 				if(rot > 0)
 					rotateTimer.addEventListener(TimerEvent.TIMER, onRotateRight);
@@ -156,7 +170,9 @@
 		function onRotateComplete(event:TimerEvent) {
 			if(moving) {
 				var len = Math.sqrt(Math.pow(Math.abs(x - gexLink.x), 2) + Math.pow(Math.abs(y - gexLink.y), 2));
-				initiative -= (int)(len / 82);
+				//trace(len);
+				//currentInitiative -= (int)(len / 73 - 0.55);//правильно вычислять расстояния до гекса в целых числах!
+				currentInitiative = 0;
 				var moveTimer:Timer = new Timer(5, len / moveSpeed);
 				var rot:Number = 90 - rotation;
 				if(rot < 0) rot = 360 + rot;
@@ -169,7 +185,7 @@
 				moveTimer.start();
 			}
 			if(attacking) {
-				initiative = 0;
+				//currentInitiative = 0;
 				RemoveHighlightMove();
 				AddHealthBar();
 				var bull = new Bullet(this);
@@ -187,10 +203,8 @@
 			gexLink.gotoAndStop(4);
 			x = gexLink.x;
 			y = gexLink.y;
-			HighlightMove();
 			moving = false;
 			AddHealthBar();
-			RefreshInfoBar();
 		}
 		
 		public function HighlightAttack() {
@@ -222,7 +236,7 @@
 		}
 		
 		public function HighlightMove() {
-			var i = gexLink.i, j = gexLink.j, k, l, r = Math.min(moveRadius, initiative), rad = 2 * r + 1;
+			var i = gexLink.i, j = gexLink.j, k, l, r = Math.min(moveRadius, currentInitiative), rad = 2 * r + 1;
 			if(r == 0) return;
 			if(i % 2 == 0) {
 				for(k = 0; k <= rad; k++)
@@ -250,13 +264,13 @@
 			}
 		}
 		
-		private function Select(event:MouseEvent):void {
+		/*private function Select(event:MouseEvent):void {
 			if(Global.playerTeam == team)
 				if(selected) 
 					SelectOff();
 				else 
 					SelectOn();
-		}
+		}*/
 		
 		public function SelectOff() {
 			Global.selectedUnit = null;
@@ -332,10 +346,12 @@
 		public function GetTeam() { return team; }
 		public function GetDamageFirst() { return damageFirst; }
 		public function GetClassName() { return className; }
-		public function GetInitiative() { return initiative; }
+		public function GetInitiative() { return currentInitiative; }
 		public function GetAttackRadius() { return attackRadius; }
 		public function GetMoveRadius() { return moveRadius; }
+		public function IsDeath() { return death; }
 
 		public function SetAttacking(a_:Boolean) { attacking = a_; }
+		public function SetInitiative(i_:int) { currentInitiative = i_; }
 	}
 }

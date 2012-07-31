@@ -29,9 +29,9 @@
 			if(unit.GetInitiative() == 0) return;
 			pressed = !pressed;
 			if(pressed) 
-				Off();
-			else 
 				On();
+			else 
+				Off();
 		}
 		
 		public function Off() {

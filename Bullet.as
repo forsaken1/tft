@@ -43,7 +43,8 @@
 			unit.removeChild(this);
 			unit.SetAttacking(false);
 			targetUnit.SetHealth(targetUnit.GetCurrentHealth() - unit.GetDamageFirst());
-			unit.RefreshInfoBar();
+			unit.SetInitiative(0);
+			//unit.RefreshInfoBar();
 		}
 	}
 }
