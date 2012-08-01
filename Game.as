@@ -1,16 +1,20 @@
 ﻿package {
 	import flash.events.TimerEvent; 
     import flash.utils.Timer; 
+	import AI;
 	
 	public class Game {
-		protected var unitsCount:int = 4, currentUnit:int;
+		protected var unitsCount:int = 4, currentEnemyUnit, currentPlayerUnit:int;
 		protected var unit, enemy:Array;
 		protected var turnTimer:Timer;
 		protected var currentTeam:Boolean;
+		public var playerUnitsCount, enemyUnitsCount:int;
 		
 		public function Game(unit_:Array, enemy_:Array) {
 			unit = unit_;
 			enemy = enemy_;
+			playerUnitsCount = 4;
+			enemyUnitsCount = playerUnitsCount;
 			Start();
 		}
 		
@@ -19,54 +23,46 @@
 			turnTimer.addEventListener(TimerEvent.TIMER, onTurn);
 			turnTimer.start();
 			
-			currentUnit = 1;
+			currentPlayerUnit = 1;
+			currentEnemyUnit = 1;
 			currentTeam = true;
-			unit[currentUnit].SelectOn();
+			unit[currentPlayerUnit].SelectOn();
 		}
 		
 		public function onTurn(event:TimerEvent) {
 			if(currentTeam) {
-				if(unit[currentUnit].GetInitiative() == 0)
+				if(unit[currentPlayerUnit].GetInitiative() == 0)
 					EnemyTurn();
 			}
 			else
-				if(enemy[currentUnit].GetInitiative() == 0)
+				if(enemy[currentEnemyUnit].GetInitiative() == 0)
 					PlayerTurn();
 		}
 		
 		function EnemyTurn() {
 			currentTeam = false;
-			unit[currentUnit].SelectOff();
-			unit[currentUnit].RefreshInitiative();
-			//var count = unitsCount;
-			//do {
-				NextUnit();
-			//	count--;
-			//	if(count == 0) 
-			//		Win();
-			//} while(!enemy[currentUnit].IsDeath());
-			trace("Enemy turn");
-			enemy[currentUnit].SetInitiative(0);
+			unit[currentPlayerUnit].SelectOff();
+			unit[currentPlayerUnit].RefreshInitiative();
+			//var ai = new AI(enemy[currentUnit]);
+			enemy[currentEnemyUnit].SetInitiative(0);
 		}
 		
 		function PlayerTurn() {
 			currentTeam = true;
-			//var count = unitsCount;
-			//do {
-				NextUnit();
-			//	count--;
-			//	if(count == 0) 
-			//		Win();
-			//} while(!unit[currentUnit].IsDeath());
-			unit[currentUnit].SelectOn();
+			NextPlayerUnit();
+			unit[currentPlayerUnit].SelectOn();
 		}
 		
-		public function NextUnit() {
-			if(!currentTeam) {
-				currentUnit++;
-				if(currentUnit > unitsCount)
-					currentUnit = 1;
-			}
+		public function NextPlayerUnit() {
+			currentPlayerUnit++;
+			if(currentPlayerUnit > unitsCount)
+				currentPlayerUnit = 1;
+		}
+		
+		public function NextEnemyUnit() {
+			currentEnemyUnit++;
+			if(currentEnemyUnit > unitsCount)
+				currentEnemyUnit = 1;
 		}
 		
 		public function Win() {
@@ -76,6 +72,17 @@
 		
 		public function Stop() {
 			turnTimer.stop();
+			
+			unit[currentPlayerUnit].SelectOff();
+				
+			for(var i = 1; i <= unitsCount; i++) {
+				if(!unit[i].IsDead()) {
+					unit[i].RemoveUnit();
+				}
+				if(!enemy[i].IsDead()) {
+					enemy[i].RemoveUnit();
+				}
+			}
 		}
 	}
 }

@@ -1,12 +1,13 @@
 ﻿package {
-	import HealthBar;
-	import AttackBtn;
 	import flash.events.MouseEvent; 
 	import flash.events.TimerEvent; 
     import flash.utils.Timer; 
 	import flash.display.Stage;
+	import HealthBar;
+	import AttackBtn;
 	import Bullet;
 	import InfoBar;
+	import AI;
 	
 	public class Unit extends unit {
 		protected var area:Object;
@@ -19,7 +20,7 @@
 		protected var hbar:HealthBar;
 		protected var attackButton:AttackBtn;
 		protected var info:InfoBar;
-		protected var selected, moving, attacking, team, death:Boolean;
+		protected var selected, moving, attacking, team, dead:Boolean;
 		protected var radius = [
 				 [[[-1,-1],[-1, 0],[99,99]], 
 				  [[ 0,-1],[99,99],[ 0, 1]], 
@@ -81,7 +82,7 @@
 			stop();
 			currentHealth = health;
 			currentInitiative = initiative;
-			death = false;
+			dead = false;
 			
 			team = team_;
 			area = area_;
@@ -102,28 +103,19 @@
 			AddHealthBar();
 			selected = false;
 			moving = false;
-			//addEventListener(MouseEvent.CLICK, Select);/////////////
 		}
-		
-		/*public function AddSelectListener() {
-			addEventListener(MouseEvent.CLICK, Select);
-		}
-		
-		public function RemoveSelectListener() {
-			removeEventListener(MouseEvent.CLICK, Select);
-		}*/
 		
 		public function RefreshInitiative() {
 			currentInitiative = initiative;
 		}
 		
 		public function AttackTo(gex_:Gex) {
-			RemoveHealthBar();
 			RemoveHighlightAttack();
+			attackButton.Off();
+			RemoveHealthBar();
 			targetLink = gex_;
 			RotateTo(gex_);
 			attacking = true;
-			attackButton.Off();
 		}
 		
 		public function MoveTo(gex_:Gex) {
@@ -172,7 +164,6 @@
 				var len = Math.sqrt(Math.pow(Math.abs(x - gexLink.x), 2) + Math.pow(Math.abs(y - gexLink.y), 2));
 				//trace(len);
 				//currentInitiative -= (int)(len / 73 - 0.55);//правильно вычислять расстояния до гекса в целых числах!
-				currentInitiative = 0;
 				var moveTimer:Timer = new Timer(5, len / moveSpeed);
 				var rot:Number = 90 - rotation;
 				if(rot < 0) rot = 360 + rot;
@@ -185,7 +176,6 @@
 				moveTimer.start();
 			}
 			if(attacking) {
-				//currentInitiative = 0;
 				RemoveHighlightMove();
 				AddHealthBar();
 				var bull = new Bullet(this);
@@ -205,6 +195,7 @@
 			y = gexLink.y;
 			moving = false;
 			AddHealthBar();
+			currentInitiative = 0;
 		}
 		
 		public function HighlightAttack() {
@@ -264,14 +255,6 @@
 			}
 		}
 		
-		/*private function Select(event:MouseEvent):void {
-			if(Global.playerTeam == team)
-				if(selected) 
-					SelectOff();
-				else 
-					SelectOn();
-		}*/
-		
 		public function SelectOff() {
 			Global.selectedUnit = null;
 			gexLink.gotoAndStop(4);
@@ -315,7 +298,7 @@
 		}
 		
 		public function RemoveHealthBar() {
-			gexLink.removeChild(hbar);
+			try { gexLink.removeChild(hbar); } catch(error:Error) {}
 		}
 		
 		public function AddHealthBar() {
@@ -328,6 +311,7 @@
 			gexLink.SetUnit(null);
 			gexLink.RefreshListener();
 			stage.removeChild(this);
+			dead = true;
 		}
 		
 		public function SetHealth(health_:int) {
@@ -335,11 +319,10 @@
 				RemoveUnit();
 			else {
 				currentHealth = health_;
-				RemoveHealthBar();
-				AddHealthBar();
+				RefreshHealthBar();
 			}
 		}
-		
+				
 		public function GetGex() { return gexLink; }
 		public function GetHealth() { return health; }
 		public function GetCurrentHealth() { return currentHealth; }
@@ -349,7 +332,7 @@
 		public function GetInitiative() { return currentInitiative; }
 		public function GetAttackRadius() { return attackRadius; }
 		public function GetMoveRadius() { return moveRadius; }
-		public function IsDeath() { return death; }
+		public function IsDead() { return dead; }
 
 		public function SetAttacking(a_:Boolean) { attacking = a_; }
 		public function SetInitiative(i_:int) { currentInitiative = i_; }

@@ -44,7 +44,6 @@
 			unit.SetAttacking(false);
 			targetUnit.SetHealth(targetUnit.GetCurrentHealth() - unit.GetDamageFirst());
 			unit.SetInitiative(0);
-			//unit.RefreshInfoBar();
 		}
 	}
 }
