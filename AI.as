@@ -12,14 +12,12 @@
 		
 		function Turn() {
 			var targetUnit = unit.FindTargetUnit();
-			//trace(targetUnit);
 			if(targetUnit != null) {
 				unit.AttackTo(targetUnit.GetGex());
 				return;
 			}
-			unit.SetInitiative(0);
-			//var targetGex = unit.FindTargetGex();
-			//unit.MoveTo(targetGex);
+			var targetGex = unit.FindTargetGex();
+			unit.MoveTo(targetGex);
 		}
 	}
 }

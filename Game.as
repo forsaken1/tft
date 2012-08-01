@@ -82,12 +82,10 @@
 		
 		public function Win() {
 			Stop();
-			trace("Win!");
 		}
 		
 		public function Lose() {
 			Stop();
-			trace("Lose!");
 		}
 		
 		public function Stop() {

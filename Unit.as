@@ -112,8 +112,8 @@
 		public function AttackTo(gex_:Gex) {
 			if(team) {
 				RemoveHighlightAttack();
-				RemoveHealthBar();
 			}
+			RemoveHealthBar();
 			targetLink = gex_;
 			RotateTo(gex_);
 			attacking = true;
@@ -122,8 +122,8 @@
 		public function MoveTo(gex_:Gex) {
 			if(team) {
 				RemoveHighlightMove();
-				RemoveHealthBar();
 			}
+			RemoveHealthBar();
 			gexLink.gotoAndStop(1);
 			gexLink.SetUnit(null);
 			gexLink.AddListener();
@@ -193,7 +193,10 @@
 		}
 		
 		function onMovingComplete(event:TimerEvent) {
-			gexLink.gotoAndStop(4);
+			if(team)
+				gexLink.gotoAndStop(4);
+			else
+				gexLink.gotoAndStop(3);
 			x = gexLink.x;
 			y = gexLink.y;
 			moving = false;
@@ -317,12 +320,34 @@
 			for(k = 0; k <= rad; k++)
 				for(l = 0; l <= rad; l++) {
 					targetUnit = null;
-					try { targetUnit = area[i + radius[r - 1][k][l][0]][j + radius[r - 1][k][l][1]].GetUnit(); } catch(error:Error) {}
-						
+					try { targetUnit = area[i + radius[side][k][l][0]][j + radius[side][k][l][1]].GetUnit(); } catch(error:Error) {}
 					if(targetUnit != null && targetUnit.GetTeam() != team) 
 						return targetUnit;
 				}
 			return null;
+		}
+		
+		public function FindTargetGex() {
+			var tg, targetGex = [100];
+			var i = gexLink.i, j = gexLink.j, k, l, r = Math.min(moveRadius, currentInitiative), rad = 2 * r + 1, side = r + 3;
+			var count = 0;
+			if(r == 0) return null;
+			if(i % 2 == 0) side = r - 1;
+			
+			for(k = 0; k <= rad; k++)
+				for(l = 0; l <= rad; l++) {
+					tg = null;
+					try { tg = area[i + radius[side][k][l][0]][j + radius[side][k][l][1]]; } catch(error:Error) {}
+					if(tg != null && tg.GetUnit() == null) {
+						targetGex[count] = tg;
+						count++;
+					}
+				}
+			var pos;
+			do {
+				pos = Math.round(Math.random() * count);
+			} while(targetGex[pos] == null);
+			return targetGex[pos];
 		}
 				
 		public function GetGex() { return gexLink; }
