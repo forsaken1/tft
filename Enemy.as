@@ -1,31 +1,8 @@
 ﻿package {
-	public class Enemy extends Unit {
+	public class Enemy {
 		
 		
-		public function FindTargetUnit() {
-			var i = gexLink.i, j = gexLink.j, k, l, r = attackRadius, rad = 2 * r + 1, targetUnit;
-			if(i % 2 == 0) {
-				for(k = 0; k <= rad; k++)
-					for(l = 0; l <= rad; l++) {
-						targetUnit = null;
-						try { targetUnit = area[i + radius[r - 1][k][l][0]][j + radius[r - 1][k][l][1]].GetUnit(); } catch(error:Error) {}
-						
-						if(targetUnit != null && targetUnit.GetTeam() != team) 
-							return targetUnit;
-					}
-			}
-			else {
-				for(k = 0; k <= rad; k++)
-					for(l = 0; l <= rad; l++)  {
-						targetUnit = null;
-						try { targetUnit = area[i + radius[r + 3][k][l][0]][j + radius[r + 3][k][l][1]].GetUnit(); } catch(error:Error) {}
-						
-						if(targetUnit != null && targetUnit.GetTeam() != team) 
-							return targetUnit;
-					}
-			}
-			return null;
-		}
+		
 		
 		public function FindTargetGex() {
 			var arraySize;

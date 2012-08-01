@@ -1,11 +1,11 @@
 ﻿package {
-	import Enemy;
+	import Unit;
 	import Gex;
 	
 	public class AI {
 		protected var unit:Unit;
 		
-		public function AI(unit_:Enemy) {
+		public function AI(unit_:Unit) {
 			unit = unit_;
 			Turn();
 		}

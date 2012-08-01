@@ -110,19 +110,23 @@
 		}
 		
 		public function AttackTo(gex_:Gex) {
-			RemoveHighlightAttack();
-			attackButton.Off();
-			RemoveHealthBar();
+			if(team) {
+				RemoveHighlightAttack();
+				RemoveHealthBar();
+			}
 			targetLink = gex_;
 			RotateTo(gex_);
 			attacking = true;
 		}
 		
 		public function MoveTo(gex_:Gex) {
-			RemoveHealthBar();
+			if(team) {
+				RemoveHighlightMove();
+				RemoveHealthBar();
+			}
+			gexLink.gotoAndStop(1);
 			gexLink.SetUnit(null);
-			gexLink.RefreshListener();
-			RemoveHighlightMove();
+			gexLink.AddListener();
 			gexLink = gex_;
 			gexLink.RemoveListener();
 			gexLink.SetUnit(this);
@@ -176,7 +180,6 @@
 				moveTimer.start();
 			}
 			if(attacking) {
-				RemoveHighlightMove();
 				AddHealthBar();
 				var bull = new Bullet(this);
 				addChild(bull);
@@ -199,60 +202,40 @@
 		}
 		
 		public function HighlightAttack() {
-			var i = gexLink.i, j = gexLink.j, k, l, r = attackRadius, rad = 2 * r + 1;
-			if(i % 2 == 0) {
-				for(k = 0; k <= rad; k++)
-					for(l = 0; l <= rad; l++) 
-						try { area[i + radius[r - 1][k][l][0]][j + radius[r - 1][k][l][1]].AddAttackListener(); } catch(error:Error) {}
-			}
-			else {
-				for(k = 0; k <= rad; k++)
-					for(l = 0; l <= rad; l++) 
-						try { area[i + radius[r + 3][k][l][0]][j + radius[r + 3][k][l][1]].AddAttackListener(); } catch(error:Error) {}
-			}
+			var i = gexLink.i, j = gexLink.j, k, l, r = attackRadius, rad = 2 * r + 1, side = r + 3;
+			if(i % 2 == 0) side = r - 1;
+			
+			for(k = 0; k <= rad; k++)
+				for(l = 0; l <= rad; l++) 
+					try { area[i + radius[side][k][l][0]][j + radius[side][k][l][1]].AddAttackListener(); } catch(error:Error) {}
 		}
 		
 		public function RemoveHighlightAttack() {
-			var i = gexLink.i, j = gexLink.j, k, l, r = attackRadius, rad = 2 * r + 1;
-			if(i % 2 == 0) {
-				for(k = 0; k <= rad; k++)
-					for(l = 0; l <= rad; l++) 
-						try { area[i + radius[r - 1][k][l][0]][j + radius[r - 1][k][l][1]].RemoveAttackListener(); } catch(error:Error) {}
-			}
-			else {
-				for(k = 0; k <= rad; k++)
-					for(l = 0; l <= rad; l++) 
-						try { area[i + radius[r + 3][k][l][0]][j + radius[r + 3][k][l][1]].RemoveAttackListener(); } catch(error:Error) {}
-			}
+			var i = gexLink.i, j = gexLink.j, k, l, r = attackRadius, rad = 2 * r + 1, side = r + 3;
+			if(i % 2 == 0) side = r - 1;
+			
+			for(k = 0; k <= rad; k++)
+				for(l = 0; l <= rad; l++) 
+					try { area[i + radius[side][k][l][0]][j + radius[side][k][l][1]].RemoveAttackListener(); } catch(error:Error) {}
 		}
 		
 		public function HighlightMove() {
-			var i = gexLink.i, j = gexLink.j, k, l, r = Math.min(moveRadius, currentInitiative), rad = 2 * r + 1;
+			var i = gexLink.i, j = gexLink.j, k, l, r = Math.min(moveRadius, currentInitiative), rad = 2 * r + 1, side = r + 3;
 			if(r == 0) return;
-			if(i % 2 == 0) {
-				for(k = 0; k <= rad; k++)
-					for(l = 0; l <= rad; l++) 
-						try { area[i + radius[r - 1][k][l][0]][j + radius[r - 1][k][l][1]].AddMoveListener(); } catch(error:Error) {}
+			if(i % 2 == 0) side = r - 1;
+			
+			for(k = 0; k <= rad; k++)
+				for(l = 0; l <= rad; l++) 
+					try { area[i + radius[side][k][l][0]][j + radius[side][k][l][1]].AddMoveListener(); } catch(error:Error) {}
 			}
-			else {
-				for(k = 0; k <= rad; k++)
-					for(l = 0; l <= rad; l++) 
-						try { area[i + radius[r + 3][k][l][0]][j + radius[r + 3][k][l][1]].AddMoveListener(); } catch(error:Error) {}
-			}
-		}
 		
 		public function RemoveHighlightMove() {
-			var i = gexLink.i, j = gexLink.j, k, l, r = moveRadius, rad = 2 * r + 1;
-			if(i % 2 == 0) {
-				for(k = 0; k <= rad; k++)
-					for(l = 0; l <= rad; l++) 
-						try { area[i + radius[r - 1][k][l][0]][j + radius[r - 1][k][l][1]].RemoveMoveListener(); } catch(error:Error) {}
-			}
-			else {
-				for(k = 0; k <= rad; k++)
-					for(l = 0; l <= rad; l++) 
-						try { area[i + radius[r + 3][k][l][0]][j + radius[r + 3][k][l][1]].RemoveMoveListener(); } catch(error:Error) {}
-			}
+			var i = gexLink.i, j = gexLink.j, k, l, r = moveRadius, rad = 2 * r + 1, side = r + 3;
+			if(i % 2 == 0) side = r - 1;
+			
+			for(k = 0; k <= rad; k++)
+				for(l = 0; l <= rad; l++) 
+						try { area[i + radius[side][k][l][0]][j + radius[side][k][l][1]].RemoveMoveListener(); } catch(error:Error) {}
 		}
 		
 		public function SelectOff() {
@@ -267,7 +250,6 @@
 		}
 		
 		public function SelectOn() {
-			try { Global.selectedUnit.SelectOff(); } catch(error:Error) {}
 			Global.selectedUnit = this;
 			gexLink.gotoAndStop(5);
 			HighlightMove();
@@ -298,7 +280,7 @@
 		}
 		
 		public function RemoveHealthBar() {
-			try { gexLink.removeChild(hbar); } catch(error:Error) {}
+			gexLink.removeChild(hbar);
 		}
 		
 		public function AddHealthBar() {
@@ -306,21 +288,41 @@
 			gexLink.addChild(hbar);
 		}
 		
-		public function RemoveUnit() {
+		public function Remove() {
 			RemoveHealthBar();
 			gexLink.SetUnit(null);
-			gexLink.RefreshListener();
+			gexLink.AddListener();
+			gexLink.gotoAndStop(1);
 			stage.removeChild(this);
 			dead = true;
+			if(team)
+				Global.playerUnitsCount--;
+			else
+				Global.enemyUnitsCount--;
 		}
 		
 		public function SetHealth(health_:int) {
 			if(health_ <= 0) 
-				RemoveUnit();
+				Remove();
 			else {
 				currentHealth = health_;
 				RefreshHealthBar();
 			}
+		}
+		
+		public function FindTargetUnit() {
+			var i = gexLink.i, j = gexLink.j, k, l, r = attackRadius, rad = 2 * r + 1, targetUnit, side = r + 3;
+			if(i % 2 == 0) side = r - 1;
+			
+			for(k = 0; k <= rad; k++)
+				for(l = 0; l <= rad; l++) {
+					targetUnit = null;
+					try { targetUnit = area[i + radius[r - 1][k][l][0]][j + radius[r - 1][k][l][1]].GetUnit(); } catch(error:Error) {}
+						
+					if(targetUnit != null && targetUnit.GetTeam() != team) 
+						return targetUnit;
+				}
+			return null;
 		}
 				
 		public function GetGex() { return gexLink; }

@@ -1,10 +1,10 @@
 ﻿package {
-	import Unit;
-	import Gex;
 	import flash.events.TimerEvent; 
     import flash.utils.Timer; 
 	import flash.display.Stage;
 	import flash.geom.Point;
+	import Unit;
+	import Gex;
 	
 	public class Bullet extends bullet {
 		private var unit, targetUnit:Unit;
@@ -40,9 +40,9 @@
 		}
 		
 		function BulletMoveComplete(event:TimerEvent) {
+			targetUnit.SetHealth(targetUnit.GetCurrentHealth() - unit.GetDamageFirst());
 			unit.removeChild(this);
 			unit.SetAttacking(false);
-			targetUnit.SetHealth(targetUnit.GetCurrentHealth() - unit.GetDamageFirst());
 			unit.SetInitiative(0);
 		}
 	}
