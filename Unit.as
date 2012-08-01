@@ -8,6 +8,7 @@
 	import Bullet;
 	import InfoBar;
 	import AI;
+	import Popup;
 	
 	public class Unit extends unit {
 		protected var area:Object;
@@ -21,6 +22,7 @@
 		protected var attackButton:AttackBtn;
 		protected var info:InfoBar;
 		protected var selected, moving, attacking, team, dead:Boolean;
+		protected var popUp:Popup;
 		protected var radius = [
 				 [[[-1,-1],[-1, 0],[99,99]], 
 				  [[ 0,-1],[99,99],[ 0, 1]], 
@@ -101,8 +103,29 @@
 			gotoAndStop(NClass + (team ? 0 : 1) * 9);
 			
 			AddHealthBar();
+			AddPopup();
 			selected = false;
 			moving = false;
+		}
+		
+		public function AddPopup() {
+			popUp = new Popup(this);
+			addEventListener(MouseEvent.MOUSE_OVER, popupMouseOver);
+			addEventListener(MouseEvent.MOUSE_OUT, popupMouseOut);
+		}
+		
+		public function RemovePopup() {
+			removeEventListener(MouseEvent.MOUSE_OVER, popupMouseOver);
+			removeEventListener(MouseEvent.MOUSE_OUT, popupMouseOut);
+			popUp = null;
+		}
+		
+		function popupMouseOver(event:MouseEvent) {
+			popUp.Show();
+		}
+		
+		function popupMouseOut(event:MouseEvent) {
+			popUp.Hide();
 		}
 		
 		public function RefreshInitiative() {
@@ -293,6 +316,7 @@
 		
 		public function Remove() {
 			RemoveHealthBar();
+			RemovePopup();
 			gexLink.SetUnit(null);
 			gexLink.AddListener();
 			gexLink.gotoAndStop(1);
