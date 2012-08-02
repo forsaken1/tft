@@ -3,12 +3,6 @@
 	import flash.events.TimerEvent; 
     import flash.utils.Timer; 
 	import flash.display.Stage;
-	import HealthBar;
-	import AttackBtn;
-	import Bullet;
-	import InfoBar;
-	import AI;
-	import Popup;
 	
 	public class Unit extends unit {
 		protected var area:Object;
@@ -108,15 +102,23 @@
 			moving = false;
 		}
 		
-		public function AddPopup() {
-			popUp = new Popup(this);
+		public function AddPopupListener() {
 			addEventListener(MouseEvent.MOUSE_OVER, popupMouseOver);
 			addEventListener(MouseEvent.MOUSE_OUT, popupMouseOut);
 		}
 		
-		public function RemovePopup() {
+		public function RemovePopupListener() {
 			removeEventListener(MouseEvent.MOUSE_OVER, popupMouseOver);
 			removeEventListener(MouseEvent.MOUSE_OUT, popupMouseOut);
+		}
+		
+		public function AddPopup() {
+			popUp = new Popup(this);
+			AddPopupListener();
+		}
+		
+		public function RemovePopup() {
+			RemovePopupListener();
 			popUp = null;
 		}
 		
@@ -216,10 +218,13 @@
 		}
 		
 		function onMovingComplete(event:TimerEvent) {
-			if(team)
+			Global.turnInfo = className + " переместился на гекс с координатами: " + gexLink.j + " и " + gexLink.i;
+			if(team) {
 				gexLink.gotoAndStop(4);
-			else
+			}
+			else {
 				gexLink.gotoAndStop(3);
+			}
 			x = gexLink.x;
 			y = gexLink.y;
 			moving = false;

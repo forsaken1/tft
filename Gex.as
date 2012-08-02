@@ -1,6 +1,5 @@
 ﻿package {
 	import flash.events.MouseEvent;
-	import Unit;
 
 	public class Gex extends gex {
 		public var i, j:int;

@@ -1,5 +1,4 @@
 ﻿package {
-	import Unit;
 	import flash.events.MouseEvent; 
 	
 	public class AttackBtn extends attackbtn {

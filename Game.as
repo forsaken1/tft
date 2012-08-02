@@ -1,19 +1,21 @@
 ﻿package {
 	import flash.events.TimerEvent; 
     import flash.utils.Timer; 
-	import AI;
+	import flash.display.Stage;
 	
 	public class Game {
 		protected var unitsCount:int = 4, currentEnemyUnit, currentPlayerUnit:int;
 		protected var unit, enemy:Array;
 		protected var turnTimer:Timer;
 		protected var currentTeam:Boolean;
+		protected var turnInfoBar:TurnInfoBar;
 		
 		public function Game(unit_:Array, enemy_:Array) {
 			unit = unit_;
 			enemy = enemy_;
 			Global.playerUnitsCount = 4;
 			Global.enemyUnitsCount = Global.playerUnitsCount;
+			Global.turnInfo = "Игра началась!";
 			
 			turnTimer = new Timer(100);
 			turnTimer.addEventListener(TimerEvent.TIMER, onTurn);
@@ -23,9 +25,22 @@
 			currentEnemyUnit = 0;
 			currentTeam = true;
 			unit[currentPlayerUnit].SelectOn();
+			
+			AddTurnInfoBar();
+		}
+		
+		public function AddTurnInfoBar() {
+			turnInfoBar = new TurnInfoBar(this);
+			Global.stage.addChild(turnInfoBar);
+		}
+		
+		public function RemoveTurnInfoBar() {
+			Global.stage.removeChild(turnInfoBar);
+			turnInfoBar = null;
 		}
 		
 		public function onTurn(event:TimerEvent) {
+			turnInfoBar.Text(Global.turnInfo);
 			if(currentTeam) {
 				if(unit[currentPlayerUnit].GetInitiative() == 0)
 					EnemyTurn();
@@ -51,7 +66,6 @@
 				NextEnemyUnit();
 				new AI(enemy[currentEnemyUnit]);
 			}
-			//enemy[currentEnemyUnit].SetInitiative(0);
 		}
 		
 		function PlayerTurn() {
@@ -91,6 +105,7 @@
 		public function Stop() {
 			turnTimer.stop();
 			
+			RemoveTurnInfoBar();			
 			try { unit[currentPlayerUnit].SelectOff(); } catch(error:Error) {}
 				
 			for(var i = 1; i <= unitsCount; i++) {

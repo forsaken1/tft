@@ -3,8 +3,6 @@
     import flash.utils.Timer; 
 	import flash.display.Stage;
 	import flash.geom.Point;
-	import Unit;
-	import Gex;
 	
 	public class Bullet extends bullet {
 		private var unit, targetUnit:Unit;
@@ -40,6 +38,7 @@
 		}
 		
 		function BulletMoveComplete(event:TimerEvent) {
+			Global.turnInfo = unit.GetClassName() + " атаковал юнита " + targetUnit.GetClassName() + " с координатами: " + targetUnit.GetGex().j + " и " + targetUnit.GetGex().i;
 			targetUnit.SetHealth(targetUnit.GetCurrentHealth() - unit.GetDamageFirst());
 			unit.removeChild(this);
 			unit.SetAttacking(false);

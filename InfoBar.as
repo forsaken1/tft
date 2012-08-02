@@ -1,7 +1,6 @@
 ﻿package {
 	import flash.text.TextField;
 	import flash.text.TextFormat;
-	import Unit;
 	
 	public class InfoBar extends infoBar {
 		private var unit:Unit;

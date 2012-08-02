@@ -1,7 +1,4 @@
 ﻿package {
-	import Unit;
-	import Gex;
-	
 	public class AI {
 		protected var unit:Unit;
 		
