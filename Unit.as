@@ -111,7 +111,7 @@
 		public function RemovePopup() {
 			removeEventListener(MouseEvent.MOUSE_OVER, popupMouseOver);
 			removeEventListener(MouseEvent.MOUSE_OUT, popupMouseOut);
-			Global.UILayer.removeChild(popUp);
+			try { Global.UILayer.removeChild(popUp); } catch(error:Error) {}
 		}
 		
 		function popupMouseOver(event:MouseEvent) {
@@ -144,6 +144,7 @@
 			gexLink.gotoAndStop(1);
 			gexLink.SetUnit(null);
 			gexLink.AddListener();
+			targetLink = gexLink;
 			gexLink = gex_;
 			gexLink.RemoveListener();
 			gexLink.SetUnit(this);
@@ -183,12 +184,10 @@
 		function onRotateComplete(event:TimerEvent) {
 			if(moving) {
 				var len = Math.sqrt(Math.pow(Math.abs(x - gexLink.x), 2) + Math.pow(Math.abs(y - gexLink.y), 2));
-				//trace(len);
-				//currentInitiative -= (int)(len / 73 - 0.55);//правильно вычислять расстояния до гекса в целых числах!
 				var moveTimer:Timer = new Timer(5, len / moveSpeed);
-				var rot:Number = 90 - rotation;
+				var rot = 90 - rotation;
 				if(rot < 0) rot = 360 + rot;
-				var rad:Number = rot * Math.PI / 180;
+				var rad = rot * Math.PI / 180;
 				dx = Math.cos(rad) * moveSpeed;
 				dy = - Math.sin(rad) * moveSpeed;
 				
@@ -221,7 +220,12 @@
 			y = gexLink.y;
 			moving = false;
 			AddHealthBar();
-			currentInitiative = 0;
+			if(team) {
+				currentInitiative -= Algo.GetDistance(gexLink, targetLink);
+				if(currentInitiative > 0) HighlightMove();
+			}
+			else
+				currentInitiative = 0;
 		}
 		
 		public function HighlightAttack() {
@@ -312,6 +316,7 @@
 		}
 		
 		public function Remove() {
+			Global.turnInfo += "Юнит " + className + " уничтожен. ";
 			RemoveHealthBar();
 			RemovePopup();
 			gexLink.SetUnit(null);

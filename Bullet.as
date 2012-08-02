@@ -40,8 +40,8 @@
 		function BulletMoveComplete(event:TimerEvent) {
 			var damage = targetUnit.GetCurrentHealth() - unit.GetDamageFirst();
 			
-			Global.turnInfo = unit.GetClassName() + " атаковал юнита " + targetUnit.GetClassName() + " с координатами: " + 
-			(targetUnit.GetGex().j + 1) + " и " + (targetUnit.GetGex().i + 1) + " и нанес ему " + unit.GetDamageFirst() + " единиц урона";
+			Global.turnInfo = "Юнит " + unit.GetClassName() + " атаковал юнита " + targetUnit.GetClassName() + " с координатами: " + 
+			(targetUnit.GetGex().j + 1) + " и " + (targetUnit.GetGex().i + 1) + " и нанес ему " + unit.GetDamageFirst() + " единиц урона. ";
 			
 			targetUnit.SetHealth(damage);
 			unit.removeChild(this);
