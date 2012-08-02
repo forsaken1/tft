@@ -31,12 +31,11 @@
 		
 		public function AddTurnInfoBar() {
 			turnInfoBar = new TurnInfoBar(this);
-			Global.stage.addChild(turnInfoBar);
+			Global.GameLayer.addChild(turnInfoBar);
 		}
 		
 		public function RemoveTurnInfoBar() {
-			Global.stage.removeChild(turnInfoBar);
-			turnInfoBar = null;
+			Global.GameLayer.removeChild(turnInfoBar);
 		}
 		
 		public function onTurn(event:TimerEvent) {
@@ -95,11 +94,11 @@
 		}
 		
 		public function Win() {
-			Stop();
+			Global.turnInfo = "Вы победили :)";
 		}
 		
 		public function Lose() {
-			Stop();
+			Global.turnInfo = "Вы проиграли :(";
 		}
 		
 		public function Stop() {

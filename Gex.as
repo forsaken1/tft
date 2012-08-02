@@ -98,7 +98,7 @@
 		}
 		
 		public function Remove() {
-			stage.removeChild(this);
+			Global.GameLayer.removeChild(this);
 		}
 		
 		function AttackGexMouseOver(event:MouseEvent) { gotoAndStop(6); }

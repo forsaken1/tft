@@ -102,24 +102,16 @@
 			moving = false;
 		}
 		
-		public function AddPopupListener() {
+		public function AddPopup() {
+			popUp = new Popup(this);
 			addEventListener(MouseEvent.MOUSE_OVER, popupMouseOver);
 			addEventListener(MouseEvent.MOUSE_OUT, popupMouseOut);
 		}
 		
-		public function RemovePopupListener() {
+		public function RemovePopup() {
 			removeEventListener(MouseEvent.MOUSE_OVER, popupMouseOver);
 			removeEventListener(MouseEvent.MOUSE_OUT, popupMouseOut);
-		}
-		
-		public function AddPopup() {
-			popUp = new Popup(this);
-			AddPopupListener();
-		}
-		
-		public function RemovePopup() {
-			RemovePopupListener();
-			popUp = null;
+			Global.UILayer.removeChild(popUp);
 		}
 		
 		function popupMouseOver(event:MouseEvent) {
@@ -218,7 +210,7 @@
 		}
 		
 		function onMovingComplete(event:TimerEvent) {
-			Global.turnInfo = className + " переместился на гекс с координатами: " + gexLink.j + " и " + gexLink.i;
+			Global.turnInfo = className + " переместился на гекс с координатами: " + (gexLink.j + 1) + " и " + (gexLink.i + 1);
 			if(team) {
 				gexLink.gotoAndStop(4);
 			}
@@ -299,15 +291,15 @@
 		}
 		
 		public function RemoveInfoBar() {
-			stage.removeChild(info);
-			stage.removeChild(attackButton);
+			Global.GameLayer.removeChild(info);
+			Global.GameLayer.removeChild(attackButton);
 		}
 		
 		public function AddInfoBar() {
 			info = new InfoBar(this);
 			attackButton = new AttackBtn(this);
-			stage.addChild(info);
-			stage.addChild(attackButton);
+			Global.GameLayer.addChild(info);
+			Global.GameLayer.addChild(attackButton);
 		}
 		
 		public function RemoveHealthBar() {
@@ -325,7 +317,7 @@
 			gexLink.SetUnit(null);
 			gexLink.AddListener();
 			gexLink.gotoAndStop(1);
-			stage.removeChild(this);
+			Global.GameLayer.removeChild(this);
 			dead = true;
 			if(team)
 				Global.playerUnitsCount--;

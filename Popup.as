@@ -20,10 +20,9 @@
 		}
 		
 		public function Show() {
-			x = 40;
-			y = - 30;
-			rotation = - unit.rotation;
-			unit.addChild(this);
+			x = unit.GetGex().x + 40;
+			y = unit.GetGex().y - 30;
+			Global.UILayer.addChild(this);
 			
 			var textFormat = new TextFormat();
 			textFormat.font = "TF2 Secondary";
@@ -46,7 +45,7 @@
 		}
 		
 		public function Hide() {
-			unit.removeChild(this);
+			Global.UILayer.removeChild(this);
 		}
 	}
 }
