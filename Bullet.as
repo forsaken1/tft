@@ -4,18 +4,25 @@
 	import flash.display.Stage;
 	import flash.geom.Point;
 	
-	public class Bullet extends bullet {
+	public class Bullet extends bullet_ {
 		private var unit, targetUnit:Unit;
 		private var moveSpeed:int = 6;
 		private var dx, dy:Number;
 		
 		public function Bullet(unit_:Unit) {
+			stop();
 			unit = unit_;
-			x = 23;
+			x = 13;
 			y = - 47;
 			
-			switch(unit.GetClassName()) {
-				case "Soldier":  break;
+			switch(unit.GetClassNumber()) {
+				case 1: case 6: gotoAndStop(1); break;
+				case 2: gotoAndStop(2); break;
+				case 3: gotoAndStop(3); break;
+				case 4: gotoAndStop(4); break;
+				case 5: gotoAndStop(5); break;
+				case 7: gotoAndStop(6); break;
+				case 8: case 9: gotoAndStop(7); break;
 			}
 		}
 		

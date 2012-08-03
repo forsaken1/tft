@@ -381,6 +381,7 @@
 		public function GetUnitPopup() { return popUp; }
 		public function GetAttackPopup() { return attackPopup; }
 		public function GetRadius() { return radius; }
+		public function GetClassNumber() { return NClass; }
 
 		public function SetAttacking(a_:Boolean) { attacking = a_; }
 		public function SetInitiative(i_:int) { currentInitiative = i_; }
