@@ -90,6 +90,8 @@
 			
 			x = gexLink.x;
 			y = gexLink.y;
+			scaleX += 0.25;
+			scaleY += 0.25;
 			
 			if(!team) {
 				rotation = 180;
@@ -293,12 +295,12 @@
 		}
 		
 		public function RemoveHealthBar() {
-			gexLink.removeChild(hbar);
+			Global.UILayer.removeChild(hbar);
 		}
 		
 		public function AddHealthBar() {
 			hbar = new HealthBar(this);
-			gexLink.addChild(hbar);
+			Global.UILayer.addChild(hbar);
 		}
 		
 		public function Remove() {

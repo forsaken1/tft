@@ -40,7 +40,9 @@
 			health.text = link.GetCurrentHealth() + "/" + link.GetHealth();
 			health.setTextFormat(textFormat);
 			
-			damage.text = "making...";
+			var firstDamage = Global.selectedUnit.GetDamageFirst();
+			var factor = Algo.GetDistanceFactor(Algo.GetDistance(Global.selectedUnit.GetGex(), link.GetGex()));
+			damage.text = (int)(firstDamage * factor * 0.9) + " ~ " + (int)(firstDamage * factor);
 			damage.setTextFormat(textFormat);
 			
 			super.Show();

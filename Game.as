@@ -63,8 +63,8 @@
 			}
 			if(Global.enemyUnitsCount > 0) {
 				NextEnemyUnit();
-				//new AI(enemy[currentEnemyUnit]);
-				enemy[currentEnemyUnit].SetInitiative(0);
+				new AI(enemy[currentEnemyUnit]);
+				//enemy[currentEnemyUnit].SetInitiative(0);
 			}
 		}
 		

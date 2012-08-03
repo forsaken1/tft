@@ -26,5 +26,14 @@
 			if(gex1.i % 2 == 0) side = 1;
 			return distance[side][i + 4][j + 4];
 		}		
+		
+		public static function GetDistanceFactor(dist) {
+			switch(dist) {
+				case 1: return 1;
+				case 2: return 0.9;
+				case 3: return 0.8;
+				case 4: return 0.7;
+			}
+		}
 	}
 }

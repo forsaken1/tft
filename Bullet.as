@@ -13,6 +13,10 @@
 			unit = unit_;
 			x = 23;
 			y = - 47;
+			
+			switch(unit.GetClassName()) {
+				case "Soldier":  break;
+			}
 		}
 		
 		public function MoveTo(targetLink:Gex) {
@@ -38,12 +42,15 @@
 		}
 		
 		function BulletMoveComplete(event:TimerEvent) {
-			var damage = targetUnit.GetCurrentHealth() - unit.GetDamageFirst();
+			var distance = Algo.GetDistance(unit.GetGex(), targetUnit.GetGex());
+			var firstDamage = unit.GetDamageFirst();
+			var damage = (int)((firstDamage - Math.random() * (firstDamage / 10)) * Algo.GetDistanceFactor(distance));
+			var health_ = targetUnit.GetCurrentHealth() - damage;
 			
 			Global.turnInfo = "Юнит " + unit.GetClassName() + " атаковал юнита " + targetUnit.GetClassName() + " с координатами: " + 
-			(targetUnit.GetGex().j + 1) + " и " + (targetUnit.GetGex().i + 1) + " и нанес ему " + unit.GetDamageFirst() + " единиц урона. ";
+			(targetUnit.GetGex().j + 1) + " и " + (targetUnit.GetGex().i + 1) + " и нанес ему " + damage + " единиц урона. ";
 			
-			targetUnit.SetHealth(damage);
+			targetUnit.SetHealth(health_);
 			unit.removeChild(this);
 			unit.SetAttacking(false);
 			unit.SetInitiative(unit.GetInitiative() - 1);

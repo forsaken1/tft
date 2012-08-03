@@ -9,8 +9,8 @@
 		public function HealthBar(unit_:Unit) {
 			stop();
 			unit = unit_;
-			x = 0;
-			y = 35;
+			x = unit.x;
+			y = unit.y + 35;
 			var health = unit.GetHealth();
 			var currentHealth = unit.GetCurrentHealth();
 			
