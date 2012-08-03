@@ -48,10 +48,10 @@
 				if(enemy[currentEnemyUnit].GetInitiative() == 0)
 					PlayerTurn();
 					
-			if(Global.enemyUnitsCount <= 0)
+			if(Global.enemyUnitsCount == 0)
 				Win();
 				
-			if(Global.playerUnitsCount <= 0)
+			if(Global.playerUnitsCount == 0)
 				Lose();
 		}
 		
@@ -63,7 +63,8 @@
 			}
 			if(Global.enemyUnitsCount > 0) {
 				NextEnemyUnit();
-				new AI(enemy[currentEnemyUnit]);
+				//new AI(enemy[currentEnemyUnit]);
+				enemy[currentEnemyUnit].SetInitiative(0);
 			}
 		}
 		

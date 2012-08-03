@@ -46,7 +46,14 @@
 			targetUnit.SetHealth(damage);
 			unit.removeChild(this);
 			unit.SetAttacking(false);
-			unit.SetInitiative(0);
+			unit.SetInitiative(unit.GetInitiative() - 1);
+			if(unit.GetTeam() && unit.GetInitiative() > 0) {
+				unit.wasShot = true;
+				unit.RefreshInfoBar();
+				unit.HighlightMove();
+			}
+			else
+				unit.SetInitiative(0);
 		}
 	}
 }

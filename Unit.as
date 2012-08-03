@@ -16,8 +16,9 @@
 		protected var attackButton:AttackBtn;
 		protected var info:InfoBar;
 		protected var selected, moving, attacking, team, dead:Boolean;
-		protected var popUp:Popup;
-		protected var radius = [
+		public var wasShot:Boolean;
+		protected var popUp, attackPopup:Popup;
+		public var radius = [
 				 [[[-1,-1],[-1, 0],[99,99]], 
 				  [[ 0,-1],[99,99],[ 0, 1]], 
 				  [[ 1,-1],[ 1, 0],[99,99]]],
@@ -97,33 +98,15 @@
 			gotoAndStop(NClass + (team ? 0 : 1) * 9);
 			
 			AddHealthBar();
-			AddPopup();
+			popUp = new UnitPopup(this);
+			attackPopup = new AttackPopup(this);
 			selected = false;
 			moving = false;
 		}
 		
-		public function AddPopup() {
-			popUp = new Popup(this);
-			addEventListener(MouseEvent.MOUSE_OVER, popupMouseOver);
-			addEventListener(MouseEvent.MOUSE_OUT, popupMouseOut);
-		}
-		
-		public function RemovePopup() {
-			removeEventListener(MouseEvent.MOUSE_OVER, popupMouseOver);
-			removeEventListener(MouseEvent.MOUSE_OUT, popupMouseOut);
-			try { Global.UILayer.removeChild(popUp); } catch(error:Error) {}
-		}
-		
-		function popupMouseOver(event:MouseEvent) {
-			popUp.Show();
-		}
-		
-		function popupMouseOut(event:MouseEvent) {
-			popUp.Hide();
-		}
-		
 		public function RefreshInitiative() {
 			currentInitiative = initiative;
+			wasShot = false;
 		}
 		
 		public function AttackTo(gex_:Gex) {
@@ -212,20 +195,20 @@
 			Global.turnInfo = className + " переместился на гекс с координатами: " + (gexLink.j + 1) + " и " + (gexLink.i + 1);
 			if(team) {
 				gexLink.gotoAndStop(4);
+				currentInitiative -= Algo.GetDistance(gexLink, targetLink);
+				if(currentInitiative > 0) {
+					HighlightMove();
+					RefreshInfoBar();
+				}
 			}
 			else {
 				gexLink.gotoAndStop(3);
+				currentInitiative = 0;
 			}
 			x = gexLink.x;
 			y = gexLink.y;
 			moving = false;
 			AddHealthBar();
-			if(team) {
-				currentInitiative -= Algo.GetDistance(gexLink, targetLink);
-				if(currentInitiative > 0) HighlightMove();
-			}
-			else
-				currentInitiative = 0;
 		}
 		
 		public function HighlightAttack() {
@@ -282,6 +265,7 @@
 			HighlightMove();
 			AddInfoBar();
 			selected = true;
+			wasShot = false;
 		}
 		
 		public function RefreshHealthBar() {
@@ -295,8 +279,10 @@
 		}
 		
 		public function RemoveInfoBar() {
-			Global.GameLayer.removeChild(info);
-			Global.GameLayer.removeChild(attackButton);
+			try { 
+				Global.GameLayer.removeChild(info);
+				Global.GameLayer.removeChild(attackButton);
+			} catch(error:Error) {}
 		}
 		
 		public function AddInfoBar() {
@@ -318,7 +304,8 @@
 		public function Remove() {
 			Global.turnInfo += "Юнит " + className + " уничтожен. ";
 			RemoveHealthBar();
-			RemovePopup();
+			popUp.Remove();
+			attackPopup.Remove();
 			gexLink.SetUnit(null);
 			gexLink.AddListener();
 			gexLink.gotoAndStop(1);
@@ -334,6 +321,9 @@
 			if(health_ <= 0) 
 				Remove();
 			else {
+				var h = (int)(health * 1.5);
+				if(health_ > h)
+					health_ = h;
 				currentHealth = health_;
 				RefreshHealthBar();
 			}
@@ -386,6 +376,9 @@
 		public function GetAttackRadius() { return attackRadius; }
 		public function GetMoveRadius() { return moveRadius; }
 		public function IsDead() { return dead; }
+		public function GetUnitPopup() { return popUp; }
+		public function GetAttackPopup() { return attackPopup; }
+		public function GetRadius() { return radius; }
 
 		public function SetAttacking(a_:Boolean) { attacking = a_; }
 		public function SetInitiative(i_:int) { currentInitiative = i_; }

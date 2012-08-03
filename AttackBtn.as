@@ -11,7 +11,8 @@
 			pressed = false;
 			x = 770;
 			y = 160;
-			addEventListener(MouseEvent.CLICK, Press);
+			if(!unit.wasShot)
+				addEventListener(MouseEvent.CLICK, Press);
 			addEventListener(MouseEvent.MOUSE_OVER, OnElement);
 			addEventListener(MouseEvent.MOUSE_OUT, OutElement);
 		}

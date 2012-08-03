@@ -4,6 +4,7 @@
 	public class Gex extends gex {
 		public var i, j:int;
 		private var unit:Unit;
+		private var popUp:GexPopup;
 		
 		public function Gex(i_, j_:int) {
 			stop();
@@ -16,6 +17,7 @@
 			y = 55 + i * 78;
 			
 			AddListener();
+			popUp = new GexPopup(this);
 		}
 		
 		public function GetUnit() { return unit; }
@@ -43,8 +45,9 @@
 		public function AddAttackListener() {
 			if(unit != null) {
 				if(unit.GetTeam() != Global.playerTeam) {
-					unit.addEventListener(MouseEvent.MOUSE_OVER, AttackGexMouseOver);
-					unit.addEventListener(MouseEvent.MOUSE_OUT, AttackGexMouseOut);
+					unit.GetUnitPopup().RemoveListener(); 
+					unit.addEventListener(MouseEvent.MOUSE_OVER, AttackEnemyMouseOver);
+					unit.addEventListener(MouseEvent.MOUSE_OUT, AttackEnemyMouseOut);
 					unit.addEventListener(MouseEvent.CLICK, AttackGex);
 				}
 			}
@@ -58,8 +61,9 @@
 		public function RemoveAttackListener() {
 			if(unit != null) {
 				if(unit.GetTeam() != Global.playerTeam) {
-					unit.removeEventListener(MouseEvent.MOUSE_OVER, AttackGexMouseOver);
-					unit.removeEventListener(MouseEvent.MOUSE_OUT, AttackGexMouseOut);
+					unit.GetUnitPopup().AddListener(); 
+					unit.removeEventListener(MouseEvent.MOUSE_OVER, AttackEnemyMouseOver);
+					unit.removeEventListener(MouseEvent.MOUSE_OUT, AttackEnemyMouseOut);
 					unit.removeEventListener(MouseEvent.CLICK, AttackGex);
 					gotoAndStop(3);
 				}
@@ -101,13 +105,16 @@
 			Global.GameLayer.removeChild(this);
 		}
 		
-		function AttackGexMouseOver(event:MouseEvent) { gotoAndStop(6); }
-		function AttackGexMouseOut(event:MouseEvent) { gotoAndStop(3); }
-		function AttackGex(event:MouseEvent) { Global.selectedUnit.AttackTo(this); }
+		function AttackEnemyMouseOver(event:MouseEvent) { gotoAndStop(6); unit.GetAttackPopup().Show(); }
+		function AttackEnemyMouseOut(event:MouseEvent) 	{ gotoAndStop(3); unit.GetAttackPopup().Hide(); }
 		
-		function MoveToGex(event:MouseEvent) { Global.selectedUnit.MoveTo(this); }
-		function MoveGexMouseOver(event:MouseEvent) { gotoAndStop(4); }
-		function MoveGexMouseOut(event:MouseEvent) 	{ gotoAndStop(2); }
+		function AttackGexMouseOver(event:MouseEvent) 	{ gotoAndStop(6); }
+		function AttackGexMouseOut(event:MouseEvent) 	{ gotoAndStop(3); }
+		function AttackGex(event:MouseEvent) 			{ Global.selectedUnit.AttackTo(this); unit.GetAttackPopup().Hide(); }
+		
+		function MoveToGex(event:MouseEvent) 		{ Global.selectedUnit.MoveTo(this); popUp.Hide(); }
+		function MoveGexMouseOver(event:MouseEvent) { gotoAndStop(4); popUp.Show();	}
+		function MoveGexMouseOut(event:MouseEvent) 	{ gotoAndStop(2); popUp.Hide(); }
 		
 		function GexMouseDown(event:MouseEvent) { gotoAndStop(3); }
 		function GexMouseOver(event:MouseEvent) { gotoAndStop(2); }
