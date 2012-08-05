@@ -3,10 +3,10 @@
 	import flash.text.TextFormat;
 	
 	public class TurnInfoBar extends turninfobar {
-		protected var game:Game;
+		protected var game;
 		private var turnInfo:TextField;		
 		
-		public function TurnInfoBar(game_:Game) {
+		public function TurnInfoBar(game_) {
 			game = game_;
 			x = 5;
 			y = 587;

@@ -1,7 +1,6 @@
 ﻿package {
 	import flash.events.TimerEvent; 
     import flash.utils.Timer; 
-	import flash.display.Stage;
 	
 	public class Game {
 		protected var unitsCount:int = 4, currentEnemyUnit, currentPlayerUnit:int;
