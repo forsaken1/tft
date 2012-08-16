@@ -18,6 +18,9 @@
 			turnInfo.height = 24;
 			
 			addChild(turnInfo);
+			
+			Global.GameLayer.addChild(this);
+			Text(Global.turnInfo);
 		}
 		
 		public function Text(text_:String) {
@@ -26,6 +29,10 @@
 			
 			turnInfo.text = text_;
 			turnInfo.setTextFormat(textFormat);
+		}
+		
+		public function Remove() {
+			Global.GameLayer.removeChild(this);
 		}
 	}
 }

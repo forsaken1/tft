@@ -18,6 +18,7 @@
 			
 			AddListener();
 			popUp = new GexPopup(this);
+			Global.GameLayer.addChild(this);
 		}
 		
 		public function GetUnit() { return unit; }

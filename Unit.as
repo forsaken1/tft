@@ -15,65 +15,9 @@
 		protected var hbar:HealthBar;
 		protected var attackButton:AttackBtn;
 		protected var info:InfoBar;
-		protected var selected, moving, attacking, team, dead:Boolean;
+		protected var selected, moving, attacking, team, dead, bot:Boolean;
 		public var wasShot:Boolean;
 		protected var popUp, attackPopup:Popup;
-		public var radius = [
-				 [[[-1,-1],[-1, 0],[99,99]], 
-				  [[ 0,-1],[99,99],[ 0, 1]], 
-				  [[ 1,-1],[ 1, 0],[99,99]]],
-				  
-				 [[[99,99],[-2,-1],[-2, 0],[-2, 1],[99,99]],
-				  [[-1,-2],[-1,-1],[-1, 0],[-1, 1],[99,99]], 
-				  [[ 0,-2],[ 0,-1],[99,99],[ 0, 1],[ 0, 2]], 
-				  [[ 1,-2],[ 1,-1],[ 1, 0],[ 1, 1],[99,99]],
-				  [[99,99],[ 2,-1],[ 2, 0],[ 2, 1],[99,99]]],
-				  
-				 [[[99,99],[-3,-2],[-3,-1],[-3, 0],[-3, 1],[99,99],[99,99]],
-				  [[99,99],[-2,-2],[-2,-1],[-2, 0],[-2, 1],[-2, 2],[99,99]],
-				  [[-1,-3],[-1,-2],[-1,-1],[-1, 0],[-1, 1],[-1, 2],[99,99]], 
-				  [[ 0,-3],[ 0,-2],[ 0,-1],[99,99],[ 0, 1],[ 0, 2],[ 0, 3]], 
-				  [[ 1,-3],[ 1,-2],[ 1,-1],[ 1, 0],[ 1, 1],[ 1, 2],[99,99]],
-				  [[99,99],[ 2,-2],[ 2,-1],[ 2, 0],[ 2, 1],[ 2, 2],[99,99]],
-				  [[99,99],[ 3,-2],[ 3,-1],[ 3, 0],[ 3, 1],[99,99],[99,99]]], 
-				  
-				 [[[99,99],[99,99],[-4,-2],[-4,-1],[-4, 0],[-4, 1],[-4, 2],[99,99],[99,99]],
-				  [[99,99],[-3,-3],[-3,-2],[-3,-1],[-3, 0],[-3, 1],[-3, 2],[99,99],[99,99]],
-				  [[99,99],[-2,-3],[-2,-2],[-2,-1],[-2, 0],[-2, 1],[-2, 2],[-2, 3],[99,99]],
-				  [[-1,-4],[-1,-3],[-1,-2],[-1,-1],[-1, 0],[-1, 1],[-1, 2],[-1, 3],[99,99]], 
-				  [[ 0,-4],[ 0,-3],[ 0,-2],[ 0,-1],[99,99],[ 0, 1],[ 0, 2],[ 0, 3],[ 0, 4]], 
-				  [[ 1,-4],[ 1,-3],[ 1,-2],[ 1,-1],[ 1, 0],[ 1, 1],[ 1, 2],[ 1, 3],[99,99]],
-				  [[99,99],[ 2,-3],[ 2,-2],[ 2,-1],[ 2, 0],[ 2, 1],[ 2, 2],[ 2, 3],[99,99]],
-				  [[99,99],[ 3,-3],[ 3,-2],[ 3,-1],[ 3, 0],[ 3, 1],[ 3, 2],[99,99],[99,99]],
-				  [[99,99],[99,99],[ 4,-2],[ 4,-1],[ 4, 0],[ 4, 1],[ 4, 2],[99,99],[99,99]]],
-				  
-				 [[[99,99],[-1, 0],[-1, 1]], 
-				  [[ 0,-1],[99,99],[ 0, 1]], 
-				  [[99,99],[ 1, 0],[ 1, 1]]],
-				  
-				 [[[99,99],[-2,-1],[-2, 0],[-2, 1],[99,99]],
-				  [[99,99],[-1,-1],[-1, 0],[-1, 1],[-1, 2]], 
-				  [[ 0,-2],[ 0,-1],[99,99],[ 0, 1],[ 0, 2]], 
-				  [[99,99],[ 1,-1],[ 1, 0],[ 1, 1],[ 1, 2]],
-				  [[99,99],[ 2,-1],[ 2, 0],[ 2, 1],[99,99]]],
-				  
-				 [[[99,99],[99,99],[-3,-1],[-3, 0],[-3, 1],[-3, 2],[99,99]],
-				  [[99,99],[-2,-2],[-2,-1],[-2, 0],[-2, 1],[-2, 2],[99,99]],
-				  [[99,99],[-1,-2],[-1,-1],[-1, 0],[-1, 1],[-1, 2],[-1, 3]], 
-				  [[ 0,-3],[ 0,-2],[ 0,-1],[99,99],[ 0, 1],[ 0, 2],[ 0, 3]], 
-				  [[99,99],[ 1,-2],[ 1,-1],[ 1, 0],[ 1, 1],[ 1, 2],[ 1, 3]],
-				  [[99,99],[ 2,-2],[ 2,-1],[ 2, 0],[ 2, 1],[ 2, 2],[99,99]],
-				  [[99,99],[99,99],[ 3,-1],[ 3, 0],[ 3, 1],[ 3, 2],[99,99]]], 
-				  
-				 [[[99,99],[99,99],[-4,-2],[-4,-1],[-4, 0],[-4, 1],[-4, 2],[99,99],[99,99]],
-				  [[99,99],[99,99],[-3,-2],[-3,-1],[-3, 0],[-3, 1],[-3, 2],[-3, 3],[99,99]],
-				  [[99,99],[-2,-3],[-2,-2],[-2,-1],[-2, 0],[-2, 1],[-2, 2],[-2, 3],[99,99]],
-				  [[99,99],[-1,-3],[-1,-2],[-1,-1],[-1, 0],[-1, 1],[-1, 2],[-1, 3],[-1, 4]], 
-				  [[ 0,-4],[ 0,-3],[ 0,-2],[ 0,-1],[99,99],[ 0, 1],[ 0, 2],[ 0, 3],[ 0, 4]], 
-				  [[99,99],[ 1,-3],[ 1,-2],[ 1,-1],[ 1, 0],[ 1, 1],[ 1, 2],[ 1, 3],[ 1, 4]],
-				  [[99,99],[ 2,-3],[ 2,-2],[ 2,-1],[ 2, 0],[ 2, 1],[ 2, 2],[ 2, 3],[99,99]],
-				  [[99,99],[99,99],[ 3,-2],[ 3,-1],[ 3, 0],[ 3, 1],[ 3, 2],[ 3, 3],[99,99]],
-				  [[99,99],[99,99],[ 4,-2],[ 4,-1],[ 4, 0],[ 4, 1],[ 4, 2],[99,99],[99,99]]]];
 		
 		public function Unit(gexLink_:Gex, area_:Object, team_:Boolean) {
 			stop();
@@ -83,6 +27,7 @@
 			
 			team = team_;
 			area = area_;
+			
 			gexLink = gexLink_;
 			gexLink.gotoAndStop(4);
 			gexLink.RemoveListener();
@@ -90,6 +35,7 @@
 			
 			x = gexLink.x;
 			y = gexLink.y;
+			
 			scaleX += 0.25;
 			scaleY += 0.25;
 			
@@ -104,6 +50,8 @@
 			attackPopup = new AttackPopup(this);
 			selected = false;
 			moving = false;
+			
+			Global.GameLayer.addChild(this);
 		}
 		
 		public function RefreshInitiative() {
@@ -219,7 +167,7 @@
 			
 			for(k = 0; k <= rad; k++)
 				for(l = 0; l <= rad; l++) 
-					try { area[i + radius[side][k][l][0]][j + radius[side][k][l][1]].AddAttackListener(); } catch(error:Error) {}
+					try { area[i + Global.radius[side][k][l][0]][j + Global.radius[side][k][l][1]].AddAttackListener(); } catch(error:Error) {}
 		}
 		
 		public function RemoveHighlightAttack() {
@@ -228,7 +176,7 @@
 			
 			for(k = 0; k <= rad; k++)
 				for(l = 0; l <= rad; l++) 
-					try { area[i + radius[side][k][l][0]][j + radius[side][k][l][1]].RemoveAttackListener(); } catch(error:Error) {}
+					try { area[i + Global.radius[side][k][l][0]][j + Global.radius[side][k][l][1]].RemoveAttackListener(); } catch(error:Error) {}
 		}
 		
 		public function HighlightMove() {
@@ -238,7 +186,7 @@
 			
 			for(k = 0; k <= rad; k++)
 				for(l = 0; l <= rad; l++) 
-					try { area[i + radius[side][k][l][0]][j + radius[side][k][l][1]].AddMoveListener(); } catch(error:Error) {}
+					try { area[i + Global.radius[side][k][l][0]][j + Global.radius[side][k][l][1]].AddMoveListener(); } catch(error:Error) {}
 			}
 		
 		public function RemoveHighlightMove() {
@@ -247,7 +195,7 @@
 			
 			for(k = 0; k <= rad; k++)
 				for(l = 0; l <= rad; l++) 
-						try { area[i + radius[side][k][l][0]][j + radius[side][k][l][1]].RemoveMoveListener(); } catch(error:Error) {}
+						try { area[i + Global.radius[side][k][l][0]][j + Global.radius[side][k][l][1]].RemoveMoveListener(); } catch(error:Error) {}
 		}
 		
 		public function SelectOff() {
@@ -338,7 +286,7 @@
 			for(k = 0; k <= rad; k++)
 				for(l = 0; l <= rad; l++) {
 					targetUnit = null;
-					try { targetUnit = area[i + radius[side][k][l][0]][j + radius[side][k][l][1]].GetUnit(); } catch(error:Error) {}
+					try { targetUnit = area[i + Global.radius[side][k][l][0]][j + Global.radius[side][k][l][1]].GetUnit(); } catch(error:Error) {}
 					if(targetUnit != null && targetUnit.GetTeam() != team) 
 						return targetUnit;
 				}
@@ -355,7 +303,7 @@
 			for(k = 0; k <= rad; k++)
 				for(l = 0; l <= rad; l++) {
 					tg = null;
-					try { tg = area[i + radius[side][k][l][0]][j + radius[side][k][l][1]]; } catch(error:Error) {}
+					try { tg = area[i + Global.radius[side][k][l][0]][j + Global.radius[side][k][l][1]]; } catch(error:Error) {}
 					if(tg != null && tg.GetUnit() == null) {
 						targetGex[count] = tg;
 						count++;
@@ -380,8 +328,8 @@
 		public function IsDead() { return dead; }
 		public function GetUnitPopup() { return popUp; }
 		public function GetAttackPopup() { return attackPopup; }
-		public function GetRadius() { return radius; }
 		public function GetClassNumber() { return NClass; }
+		public function GetArea() { return area; }
 
 		public function SetAttacking(a_:Boolean) { attacking = a_; }
 		public function SetInitiative(i_:int) { currentInitiative = i_; }
